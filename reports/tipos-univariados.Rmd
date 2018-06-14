@@ -31,13 +31,20 @@ paleta = c("#404E4D",
 ```{r}
 ## ANTES DE USAR
 # Para criar data/movies.csv
-# import_data("tom_cruise") ou com o ator/atriz que você escolher
+# import_data("tom_cruise") 
+#ou com o ator/atriz que você escolher
 ```
 
 
 ```{r read}
+akira =  import_data("jake_gyllenhaal") 
 filmes = read_imported_data()
 ```
+
+```{r}
+filmes
+```
+
 
 ## Descrição
 
