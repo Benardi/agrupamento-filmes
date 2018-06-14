@@ -14,6 +14,8 @@ library(plotly)
 library(ggdendro)
 
 source(here::here("code/lib.R"))
+source(here::here("code/plota_solucoes_hclust.R"))
+
 theme_set(theme_report())
 
 knitr::opts_chunk$set(tidy = FALSE,
@@ -37,7 +39,7 @@ paleta = c("#404E4D",
 
 
 ```{r read}
-akira =  import_data("jake_gyllenhaal") 
+import_data("jake_gyllenhaal") 
 filmes = read_imported_data()
 ```
 
@@ -130,5 +132,37 @@ atribuicoes %>%
     scale_color_brewer(palette = "Dark2") + 
     labs(x = "", y = "Avaliação RT") + 
     coord_flip() 
+```
+
+## Com duas dimensões
+
+```{r}
+agrupamento_h_2d = filmes %>% 
+    mutate(bilheteria = log10(bilheteria)) %>%
+    mutate_at(vars(avaliacao, bilheteria), funs(scale)) %>%
+    column_to_rownames("filme") %>%
+    select(avaliacao, bilheteria) %>%
+    dist(method = "euclidean") %>% 
+    hclust(method = "ward.D")    
+
+ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F)
+```
+
+```{r}
+filmes2 = filmes %>% mutate(bilheteria = log10(bilheteria)) %>% 
+plota_hclusts_2d(agrupamento_h_2d,
+                 filmes2,
+                 c("avaliacao", "bilheteria"),
+                 linkage_method = "centroid",
+                 ks = 1:6) +
+    scale_y_log10() +
+    scale_color_brewer(palette = "Dark2")
+```
+
+```{r}
+filmes %>% 
+    ggplot(aes(bilheteria, ..density..)) + 
+    geom_histogram(bins=5,fill = paleta[3], color = "black") +
+    scale_x_log10()
 ```
 
