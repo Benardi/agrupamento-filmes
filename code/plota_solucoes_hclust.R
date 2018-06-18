@@ -18,7 +18,7 @@ plota_hclusts_1d = function(dados_filme,
     library(dplyr, warn.conflicts = F)
     
     agrupamento_h = dados_filme %>% 
-        column_to_rownames("TITLE") %>% 
+        column_to_rownames("filme") %>% 
         select_(nome_coluna) %>%
         dist(method = dist_method) %>% 
         hclust(method = linkage_method)
@@ -26,8 +26,8 @@ plota_hclusts_1d = function(dados_filme,
     atribuicoes = get_grupos(agrupamento_h, num_grupos = ks)
     
     atribuicoes = atribuicoes %>% 
-        mutate(TITLE = label) %>% 
-        left_join(filmes, by = "TITLE")
+        mutate(filme = label) %>% 
+        left_join(filmes, by = "filme")
     
     atribuicoes %>% 
         ggplot(aes_string(y = nome_coluna, colour = "grupo")) + 
@@ -52,8 +52,8 @@ plota_hclusts_2d = function(agrupamento,
     atribuicoes = get_grupos(agrupamento, num_grupos = ks)
     
     atribuicoes = atribuicoes %>% 
-        mutate(TITLE = label) %>% 
-        left_join(filmes, by = "TITLE")
+        mutate(filme = label) %>% 
+        left_join(filmes, by = "filme")
     
     atribuicoes %>% 
         ggplot(aes_string(x = nome_colunas[1], y = nome_colunas[2], colour = "grupo")) + 

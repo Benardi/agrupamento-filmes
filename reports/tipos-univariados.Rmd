@@ -149,20 +149,30 @@ ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F)
 ```
 
 ```{r}
-filmes2 = filmes %>% mutate(bilheteria = log10(bilheteria)) %>% 
-plota_hclusts_2d(agrupamento_h_2d,
-                 filmes2,
-                 c("avaliacao", "bilheteria"),
-                 linkage_method = "centroid",
-                 ks = 1:6) +
-    scale_y_log10() +
-    scale_color_brewer(palette = "Dark2")
-```
-
-```{r}
 filmes %>% 
     ggplot(aes(bilheteria, ..density..)) + 
     geom_histogram(bins=5,fill = paleta[3], color = "black") +
     scale_x_log10()
 ```
 
+```{r}
+agrupamento_h_2d = filmes %>%
+   mutate(bilheteria = log10(bilheteria)) %>%
+   mutate_at(vars("avaliacao", "bilheteria"), funs(scale)) %>%
+   column_to_rownames("filme") %>%
+   select("avaliacao", "bilheteria") %>%
+   dist(method = "euclidean") %>%
+   hclust(method = "centroid")
+
+ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F)
+```
+
+```{r}
+filmes2 = filmes %>% mutate(bilheteria = log10(bilheteria))
+plota_hclusts_2d(agrupamento_h_2d,
+                filmes2,
+                c("avaliacao", "bilheteria"),
+                linkage_method = "centroid", ks = 1:6) +
+   scale_y_log10() +
+   scale_color_brewer(palette = "Dark2")
+```
