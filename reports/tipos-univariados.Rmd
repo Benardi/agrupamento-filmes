@@ -169,25 +169,13 @@ atribuicoes %>%
 ## Com duas dimensões
 
 ```{r}
-agrupamento_h_2d = filmes %>% 
-    mutate(bilheteria = log10(bilheteria)) %>%
-    mutate_at(vars(avaliacao, bilheteria), funs(scale)) %>%
-    column_to_rownames("filme") %>%
-    select(avaliacao, bilheteria) %>%
-    dist(method = "euclidean") %>% 
-    hclust(method = "ward.D")    
-
-ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F)
-```
-
-```{r}
 agrupamento_h_2d = filmes %>%
    mutate(bilheteria = log10(bilheteria)) %>%
    mutate_at(vars("avaliacao", "bilheteria"), funs(scale)) %>%
    column_to_rownames("filme") %>%
    select("avaliacao", "bilheteria") %>%
    dist(method = "euclidean") %>%
-   hclust(method = "centroid")
+   hclust(method = "ward.D")
 
 ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F)
 ```
@@ -197,7 +185,8 @@ filmes2 = filmes %>% mutate(bilheteria = log10(bilheteria))
 plota_hclusts_2d(agrupamento_h_2d,
                 filmes2,
                 c("avaliacao", "bilheteria"),
-                linkage_method = "centroid", ks = 1:6) +
+                linkage_method = "ward.D", ks = 1:6) +
    scale_y_log10() +
    scale_color_brewer(palette = "Dark2")
 ```
+
