@@ -73,7 +73,23 @@ filmes %>%
         stat_qq()
 ```
 
+```{r}
+p = filmes %>% 
+    ggplot(aes(x = "", y = bilheteria, label = filme)) + 
+    geom_jitter(width = .05, alpha = .3, size = 3) + 
+    labs(x = "")
+
+ggplotly(p)
+```
+
 ### Avaliação
+
+```{r}
+filmes %>% 
+    ggplot(aes(x = ano, y = avaliacao)) + 
+    geom_point(size = 4, color = paleta[1])  +
+    scale_y_continuous(limits = c(0, 100))
+```
 
 ```{r}
 filmes %>% 
@@ -87,14 +103,12 @@ filmes %>%
 filmes %>% 
     group_by(filme) %>%
     ggplot(aes(sample=avaliacao)) + 
-        stat_qq()
+    stat_qq() 
 ```
-
-## Estrutura de grupos?
 
 ```{r}
 p = filmes %>% 
-    ggplot(aes(x = "", y = bilheteria, label = filme)) + 
+    ggplot(aes(x = "", y = avaliacao, label = filme)) + 
     geom_jitter(width = .05, alpha = .3, size = 3) + 
     labs(x = "")
 
