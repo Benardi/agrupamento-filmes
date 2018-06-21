@@ -156,14 +156,17 @@ atribuicoes %>%
 ```{r}
 k_escolhido = 3
 
-atribuicoes %>% 
+plot_atrib <-
+    atribuicoes %>% 
     filter(k == k_escolhido) %>% 
     ggplot(aes(x = reorder(label, avaliacao), y = avaliacao, colour = grupo)) + 
     geom_jitter(width = .02, height = 0, size = 3, alpha = .6) + 
     facet_wrap(~ paste(k, " grupos")) + 
     scale_color_brewer(palette = "Dark2") + 
     labs(x = "", y = "Avaliação RT") + 
-    coord_flip() 
+    coord_flip()
+
+ggplotly(plot_atrib)
 ```
 
 ## Com duas dimensões
@@ -181,12 +184,38 @@ ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F)
 ```
 
 ```{r}
-filmes2 = filmes %>% mutate(bilheteria = log10(bilheteria))
+filmes2 <- filmes %>%
+    mutate(bilheteria = log10(bilheteria))
+
 plota_hclusts_2d(agrupamento_h_2d,
                 filmes2,
                 c("avaliacao", "bilheteria"),
-                linkage_method = "ward.D", ks = 1:6) +
-   scale_y_log10() +
-   scale_color_brewer(palette = "Dark2")
+                linkage_method = "ward.D", ks = 1:6) + 
+    scale_y_log10() +
+    scale_color_brewer(palette = "Dark2")
 ```
 
+```{r}
+atribuicoes = get_grupos(agrupamento_h_2d, num_grupos = 1:6)
+
+atribuicoes = atribuicoes %>% 
+    filter(k == 3) %>%
+    mutate(filme = label) %>% 
+    left_join(filmes, by = "filme")
+
+z <- atribuicoes %>%
+    ggplot(aes(x = avaliacao,
+               y = bilheteria,
+               colour = grupo,
+               text = paste(
+                    "Filme:", filme,
+                    "\nBilheteria:", bilheteria,"m\n",
+                    "Avaliação:", avaliacao))) + 
+    geom_jitter(width = .02, height = 0, size = 3, alpha = .6) + 
+    facet_wrap(~ paste(k, " grupos")) + 
+    scale_color_brewer(palette = "Dark2") +
+    scale_y_log10()
+
+ggplotly(z, tooltip = "text") %>%
+    layout(autosize = F)
+```
