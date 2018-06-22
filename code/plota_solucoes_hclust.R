@@ -11,7 +11,8 @@ plota_hclusts_1d = function(dados_filme,
                             nome_coluna, # coluna usada para distâncias
                             dist_method = "euclidean", 
                             linkage_method = "complete", 
-                            ks = 1:9){
+                            ks = 1:9,
+                            palette = "Set2"){
     #' Retorna um ggplot das soluções de agrupamento de `dados_filme` 
     #' para as quantidades de grupos em `ks` usando `hclust`.
     library(ggplot2)
@@ -34,7 +35,7 @@ plota_hclusts_1d = function(dados_filme,
         geom_jitter(aes(x = " "), 
                     width = .02, height = 0, size = 1.6, alpha = .6) + 
         facet_wrap(~ paste(k, " grupos")) + 
-        scale_color_brewer(palette = "Set2") + 
+        scale_color_brewer(palette = palette) + 
         xlab("") 
 }
 
@@ -43,7 +44,8 @@ plota_hclusts_2d = function(agrupamento,
                             nome_colunas, # coluna usada para distâncias
                             dist_method = "euclidean", 
                             linkage_method = "complete", 
-                            ks = 1:9){
+                            ks = 1:9,
+                            palette = "Set2"){
     #' Retorna um ggplot das soluções de agrupamento de `dados_filme` 
     #' para as quantidades de grupos em `ks` usando `hclust`.
     library(ggplot2)
@@ -59,5 +61,5 @@ plota_hclusts_2d = function(agrupamento,
         ggplot(aes_string(x = nome_colunas[1], y = nome_colunas[2], colour = "grupo")) + 
         geom_jitter(width = .02, height = 0, size = 1.6, alpha = .6) + 
         facet_wrap(~ paste(k, " grupos")) + 
-        scale_color_brewer(palette = "Set2")
+        scale_color_brewer(palette = palette)
 }

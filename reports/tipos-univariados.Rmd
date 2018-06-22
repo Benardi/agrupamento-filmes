@@ -79,7 +79,9 @@ p = filmes %>%
     geom_jitter(width = .05, alpha = .3, size = 3) + 
     labs(x = "")
 
-ggplotly(p)
+ggplotly(p) %>% 
+    layout(autosize = F)
+
 ```
 
 ### Avaliação
@@ -112,7 +114,9 @@ p = filmes %>%
     geom_jitter(width = .05, alpha = .3, size = 3) + 
     labs(x = "")
 
-ggplotly(p)
+ggplotly(p) %>% 
+    layout(autosize = F)
+
 ```
 
 ## Agrupamento hierárquico
@@ -166,7 +170,9 @@ plot_atrib <-
     labs(x = "", y = "Avaliação RT") + 
     coord_flip()
 
-ggplotly(plot_atrib)
+ggplotly(plot_atrib) %>%
+    layout(autosize = F)
+
 ```
 
 ## Com duas dimensões
@@ -190,9 +196,10 @@ filmes2 <- filmes %>%
 plota_hclusts_2d(agrupamento_h_2d,
                 filmes2,
                 c("avaliacao", "bilheteria"),
-                linkage_method = "ward.D", ks = 1:6) + 
-    scale_y_log10() +
-    scale_color_brewer(palette = "Dark2")
+                linkage_method = "ward.D", 
+                ks = 1:6,
+                palette = "Dark2") + 
+    scale_y_log10()
 ```
 
 ```{r}
