@@ -10,6 +10,13 @@ output:
     toc_float: yes
 ---
 
+## Introdução
+
+> Análise exploratória de dados do [RottenTomatoes](https://www.rottentomatoes.com/) sobre o ator Jake Gyllenhaal. O código empregado na extração dos dados aqui analizados e a descrição de como o usar encontra-se no  [repositório origem](https://github.com/Benardi/agrupamento-filmes/) deste relatório.
+
+* Entradas que não contêm dados sobre bilheteria foram ignorados.
+
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(here)
@@ -33,6 +40,8 @@ paleta = c("#404E4D",
            "#F4743B")
 ```
 
+## Data Overview
+
 ```{r read, message=FALSE, warning=FALSE}
 import_data("jake_gyllenhaal") 
 filmes <- read_imported_data()
@@ -41,14 +50,14 @@ filmes %>%
 ```
 
 
-## Data Overview
 
 ### Bilheteria
 
 ```{r}
 filmes %>% 
     ggplot(aes(x = ano, y = bilheteria)) + 
-    geom_point(size = 4, color = paleta[1]) 
+    geom_point(size = 4, color = paleta[1]) +
+    labs(y = "Bilheteria", x = "Ano de lançamento")
 ```
 
 
@@ -78,7 +87,7 @@ p <- filmes %>%
                             "\nBilheteria:",
                             bilheteria,"m"))) + 
     geom_jitter(width = .05, alpha = .3, size = 3) + 
-    labs(x = "")
+    labs(x = "", y="Bilheteria")
 
 ggplotly(p, tooltip="text") %>% 
     layout(autosize = F)
@@ -90,7 +99,8 @@ ggplotly(p, tooltip="text") %>%
 filmes %>% 
     ggplot(aes(x = ano, y = avaliacao)) + 
     geom_point(size = 4, color = paleta[1])  +
-    scale_y_continuous(limits = c(0, 100))
+    scale_y_continuous(limits = c(0, 100)) +
+    labs(y = "Avaliação RT", x = "Ano de lançamento")
 ```
 
 ```{r}
@@ -116,7 +126,7 @@ p <- filmes %>%
                     "Filme:",filme,
                     "\nAvaliação:",avaliacao))) + 
     geom_jitter(width = .05, alpha = .3, size = 3) + 
-    labs(x = "")
+    labs(x = "", y="Avaliação RT")
 
 ggplotly(p, tooltip = "text") %>% 
     layout(autosize = F)
@@ -159,7 +169,8 @@ atribuicoes %>%
     ggplot(aes(x = "Filmes", y = avaliacao, colour = grupo)) + 
     geom_jitter(width = .02, height = 0, size = 1.6, alpha = .6) + 
     facet_wrap(~ paste(k, " grupos")) + 
-    scale_color_brewer(palette = "Dark2")
+    scale_color_brewer(palette = "Dark2") +
+    labs(y = "Avaliação RT", x = "", title = "Clusterização com uma Dimensão")
 
 ```
 
@@ -197,7 +208,8 @@ agrupamento_h_2d = filmes %>%
    dist(method = "euclidean") %>%
    hclust(method = "ward.D")
 
-ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F)
+ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F) +
+    labs(y = "Dissimilaridade", x = "", title = "Dendrograma")
 ```
 
 ```{r}
@@ -210,7 +222,8 @@ plota_hclusts_2d(agrupamento_h_2d,
                 linkage_method = "ward.D", 
                 ks = 1:6,
                 palette = "Dark2") + 
-    scale_y_log10()
+    scale_y_log10() +
+    labs(y = "Bilheteria", x = "Avaliação", title = "Clusterização com Duas Dimensões")
 ```
 
 ```{r}
@@ -232,7 +245,9 @@ p <- atribuicoes %>%
     geom_jitter(width = .02, height = 0, size = 3, alpha = .6) + 
     facet_wrap(~ paste(k, " grupos")) + 
     scale_color_brewer(palette = "Dark2") +
-    scale_y_log10()
+    scale_y_log10() +
+    labs(y = "Bilheteria", x = "Avaliação RT")
+
 
 ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
