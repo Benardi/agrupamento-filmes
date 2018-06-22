@@ -1,5 +1,6 @@
 ---
 title: "Tipos de filme de Jake Gyllenhaal"
+author: "José Benardi de Souza Nunes"
 output:
   html_notebook:
     toc: yes
@@ -16,6 +17,11 @@ output:
 
 * Entradas que não contêm dados sobre bilheteria foram ignorados.
 
+<br>
+
+***
+
+<br>
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -42,14 +48,12 @@ paleta = c("#404E4D",
 
 ## Data Overview
 
-```{r read, message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 import_data("jake_gyllenhaal") 
 filmes <- read_imported_data()
 filmes %>% 
     glimpse()
 ```
-
-
 
 ### Bilheteria
 
@@ -68,8 +72,9 @@ ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 ```
 
-* Bilheteria e ano de lançamento 
+* Entre os filmes em que Jake atuou um foge aos outros em termos de faturamento, o memóravel blockbuster **"O dia depois de amanhã"** lançado em 2004.
 
+* É possível perceber uma tendência de queda no faturamento dos filmes em que Jake atuou após 2013.
 
 ```{r}
 filmes %>% 
@@ -82,12 +87,9 @@ filmes %>%
 
 ```
 
-```{r}
-filmes %>% 
-    group_by(filme) %>%
-    ggplot(aes(sample=bilheteria)) + 
-        stat_qq()
-```
+* Vemos claramente a disparidade entre **"O dia depois de amanhã"**  e os outros filmes.
+
+* Nenhum valor fora do domínio de valores esperado, e.g. valores negativos.
 
 ```{r}
 p <- filmes %>% 
@@ -103,6 +105,10 @@ p <- filmes %>%
 ggplotly(p, tooltip="text") %>% 
     layout(autosize = F)
 ```
+
+* Separar os filmes entre os de bilheteria abaixo e acima de 50 milhões parece uma abordagem razoável.
+
+* **"O dia depois de amanhã"** aparenta formar um exército de um filme só. O que nos daria 3 grupos. 
 
 ### Avaliação
 
@@ -122,6 +128,9 @@ ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 ```
 
+* Entre 2005 e 2010 Jake participou de uma série de filmes em particular que não agradou os críticos 
+* Não aparenta haver uma tendência particularmente clara em razão do ano de lançamento. 
+
 ```{r}
 filmes %>% 
     ggplot(aes(x = avaliacao)) + 
@@ -133,12 +142,10 @@ filmes %>%
 
 ```
 
-```{r}
-filmes %>% 
-    group_by(filme) %>%
-    ggplot(aes(sample=avaliacao)) + 
-    stat_qq() 
-```
+* É possível perceber uma quantidade considerável de filmes com notas acima de 80.
+
+* Nenhum valor fora do domínio de valores esperado, e.g. valores negativos.
+
 
 ```{r}
 p <- filmes %>% 
@@ -154,6 +161,17 @@ ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 
 ```
+
+* Intuitivamente três grupos surgem:
+    * Os filmes com avaliação acima de 80
+    * Os filmes com avaliação entre 55 e 70 
+    * Os filmes com avaliação abaixo de 55
+
+<br>
+
+***
+
+<br>
 
 ## Agrupamento hierárquico
 
