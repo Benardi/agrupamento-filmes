@@ -26,7 +26,6 @@ knitr::opts_chunk$set(tidy = FALSE,
                       fig.width = 6,
                       fig.height = 5,
                       echo = TRUE)
-
 paleta = c("#404E4D",
            "#92DCE5",
            "#938BA1",
@@ -34,12 +33,9 @@ paleta = c("#404E4D",
            "#F4743B")
 ```
 
-```{r read}
+```{r read, message=FALSE, warning=FALSE}
 import_data("jake_gyllenhaal") 
-filmes = read_imported_data()
-```
-
-```{r}
+filmes <- read_imported_data()
 filmes %>% 
     glimpse()
 ```
@@ -74,14 +70,18 @@ filmes %>%
 ```
 
 ```{r}
-p = filmes %>% 
-    ggplot(aes(x = "", y = bilheteria, label = filme)) + 
+p <- filmes %>% 
+    ggplot(aes(x = "",
+               y = bilheteria,
+               label = filme,
+               text = paste("Filme:",filme,
+                            "\nBilheteria:",
+                            bilheteria,"m"))) + 
     geom_jitter(width = .05, alpha = .3, size = 3) + 
     labs(x = "")
 
-ggplotly(p) %>% 
+ggplotly(p, tooltip="text") %>% 
     layout(autosize = F)
-
 ```
 
 ### Avaliação
@@ -109,17 +109,23 @@ filmes %>%
 ```
 
 ```{r}
-p = filmes %>% 
-    ggplot(aes(x = "", y = avaliacao, label = filme)) + 
+p <- filmes %>% 
+    ggplot(aes(x = "",
+               y = avaliacao,
+               text = paste(
+                    "Filme:",filme,
+                    "\nAvaliação:",avaliacao))) + 
     geom_jitter(width = .05, alpha = .3, size = 3) + 
     labs(x = "")
 
-ggplotly(p) %>% 
+ggplotly(p, tooltip = "text") %>% 
     layout(autosize = F)
 
 ```
 
 ## Agrupamento hierárquico
+
+### Uma dimensão
 
 ```{r}
 agrupamento_h = filmes %>% 
@@ -160,22 +166,27 @@ atribuicoes %>%
 ```{r}
 k_escolhido = 3
 
-plot_atrib <-
-    atribuicoes %>% 
+p <-atribuicoes %>% 
     filter(k == k_escolhido) %>% 
-    ggplot(aes(x = reorder(label, avaliacao), y = avaliacao, colour = grupo)) + 
+    ggplot(aes(x = reorder(label, avaliacao),
+               y = avaliacao,
+               colour = grupo,
+               text = paste(
+                    "Filme:", reorder(label, avaliacao),
+                    "\nAvaliação:", avaliacao,
+                    "\nGrupo:", grupo))) + 
     geom_jitter(width = .02, height = 0, size = 3, alpha = .6) + 
     facet_wrap(~ paste(k, " grupos")) + 
     scale_color_brewer(palette = "Dark2") + 
     labs(x = "", y = "Avaliação RT") + 
     coord_flip()
 
-ggplotly(plot_atrib) %>%
+ggplotly(p,tooltip = "text") %>%
     layout(autosize = F)
 
 ```
 
-## Com duas dimensões
+### Com duas dimensões
 
 ```{r}
 agrupamento_h_2d = filmes %>%
@@ -210,7 +221,7 @@ atribuicoes = atribuicoes %>%
     mutate(filme = label) %>% 
     left_join(filmes, by = "filme")
 
-z <- atribuicoes %>%
+p <- atribuicoes %>%
     ggplot(aes(x = avaliacao,
                y = bilheteria,
                colour = grupo,
@@ -223,6 +234,6 @@ z <- atribuicoes %>%
     scale_color_brewer(palette = "Dark2") +
     scale_y_log10()
 
-ggplotly(z, tooltip = "text") %>%
+ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 ```
