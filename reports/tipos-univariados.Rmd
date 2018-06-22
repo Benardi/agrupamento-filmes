@@ -11,7 +11,7 @@ output:
     toc_float: yes
 ---
 
-## Introdução
+# Introdução
 
 > Análise exploratória de dados do [RottenTomatoes](https://www.rottentomatoes.com/) sobre o ator Jake Gyllenhaal. O código empregado na extração dos dados aqui analizados e a descrição de como o usar encontra-se no  [repositório origem](https://github.com/Benardi/agrupamento-filmes/) deste relatório.
 
@@ -46,7 +46,7 @@ paleta = c("#404E4D",
            "#F4743B")
 ```
 
-## Data Overview
+# Data Overview
 
 ```{r message=FALSE, warning=FALSE}
 import_data("jake_gyllenhaal") 
@@ -55,7 +55,7 @@ filmes %>%
     glimpse()
 ```
 
-### Bilheteria
+## Bilheteria
 
 ```{r}
 p <- filmes %>%
@@ -110,7 +110,7 @@ ggplotly(p, tooltip="text") %>%
 
 * **"O dia depois de amanhã"** aparenta formar um exército de um filme só. O que nos daria 3 grupos. 
 
-### Avaliação
+## Avaliação
 
 ```{r}
 p <- filmes %>% 
@@ -173,9 +173,84 @@ ggplotly(p, tooltip = "text") %>%
 
 <br>
 
-## Agrupamento hierárquico
+# Agrupamento hierárquico
 
-### Uma dimensão
+<br>
+<br>
+
+## Uma dimensão
+
+<br>
+
+### Bilheteria 
+
+```{r}
+agrupamento_h = filmes %>% 
+    mutate(nome = paste0(filme, " (bil=", bilheteria, ")")) %>% 
+    as.data.frame() %>% 
+    column_to_rownames("filme") %>% 
+    select(bilheteria) %>%
+    dist(method = "euclidian") %>% 
+    hclust(method = "centroid")
+
+ggdendrogram(agrupamento_h, rotate = T, size = 2, theme_dendro = F) +
+    labs(y = "Dissimilaridade", x = "", title = "Dendrograma") +
+    geom_hline(aes(yintercept = c(20,30), color=c("4 grupos","3 grupos"))) +
+    scale_colour_manual(name="#Grupos",
+    values=c("#56B4E9", "#FF9999"))
+```
+
+* Em termos de Dendograma a divisão em quatro grupos assim como a divisão em 3 grupos parecem ser apropriadas, dado que o aumento de dissimilaridade de 4 para 3 grupos não aparentar ser substancial.
+*  Corte feito para 4 grupos
+
+```{r}
+atribuicoes = get_grupos(agrupamento_h, num_grupos = 1:6)
+
+atribuicoes = atribuicoes %>% 
+    left_join(filmes, by = c("label" = "filme"))
+
+atribuicoes %>% 
+    ggplot(aes(x = "Filmes", y = bilheteria, colour = grupo)) + 
+    geom_jitter(width = .02, height = 0, size = 1.6, alpha = .6) + 
+    facet_wrap(~ paste(k, " grupos")) + 
+    scale_color_brewer(palette = "Dark2") +
+    labs(y = "Bilheteria (milhões)", x = "", title = "Agrupamento com 1 Dimensão")
+
+```
+
+* A divisão em 4 grupos parece ser mais apropriada que a divisão em 3 grupos.
+    * O cluster de filmes na base do gráfico aparenta exigir um grupo próprio (Na divisão em 4 grupos seria o grupo 1). 
+
+```{r}
+k_escolhido = 4
+
+m <- list(l = 220)
+
+p <-atribuicoes %>% 
+    filter(k == k_escolhido) %>% 
+    ggplot(aes(x = reorder(label, bilheteria),
+               y = bilheteria,
+               colour = grupo,
+               text = paste(
+                    "Filme:", reorder(label, bilheteria),
+                    "\nAvaliação:", bilheteria,
+                    "\nGrupo:", grupo))) + 
+    geom_jitter(width = .02, height = 0, size = 3, alpha = .6) + 
+    facet_wrap(~ paste(k, " grupos")) + 
+    scale_color_brewer(palette = "Dark2") + 
+    labs(x = "", y = "Avaliação RT") + 
+    coord_flip()
+
+ggplotly(p,tooltip = "text") %>%
+    layout(autosize = F, margin = m)
+
+```
+
+* **O dia depois de amanhã** exigiu um grupo para si, como era esperado.
+
+<br>
+
+### Avaliação 
 
 ```{r}
 agrupamento_h = filmes %>% 
@@ -186,20 +261,14 @@ agrupamento_h = filmes %>%
     dist(method = "euclidian") %>% 
     hclust(method = "ward.D")
 
-ggdendrogram(agrupamento_h, rotate = T, size = 2, theme_dendro = F) + 
-    labs(y = "Dissimilaridade", x = "", title = "Dendrograma")
+ggdendrogram(agrupamento_h, rotate = T, size = 2, theme_dendro = F) +
+    labs(y = "Dissimilaridade", x = "", title = "Dendrograma") +
+    geom_hline(aes(yintercept = 30),color="red")
 ```
 
-```{r}
-get_grupos <- function(agrupamento, num_grupos){
-    agrupamento %>% 
-        cutree(num_grupos) %>% 
-        as.data.frame() %>% 
-        mutate(label = rownames(.)) %>% 
-        gather(key =  "k", value = "grupo", -label) %>% 
-        mutate(grupo = as.character(grupo))
-}
+* Em termos de Dendograma a **divisão em três grupos parece ser a mais apropriada**, dado que o aumento da dissimilaridade passa a ser substancial quando passamos de 3 para 2 grupos.
 
+```{r}
 atribuicoes = get_grupos(agrupamento_h, num_grupos = 1:6)
 
 atribuicoes = atribuicoes %>% 
@@ -210,12 +279,16 @@ atribuicoes %>%
     geom_jitter(width = .02, height = 0, size = 1.6, alpha = .6) + 
     facet_wrap(~ paste(k, " grupos")) + 
     scale_color_brewer(palette = "Dark2") +
-    labs(y = "Avaliação RT", x = "", title = "Clusterização com uma Dimensão")
+    labs(y = "Avaliação RT", x = "", title = "Agrupamento com 1 Dimensão")
 
 ```
 
+* Visualmente a divisão em três grupos parece de fato ser apropriada, o que está em acordo com o dendograma.
+
 ```{r}
 k_escolhido = 3
+
+m <- list(l = 220)
 
 p <-atribuicoes %>% 
     filter(k == k_escolhido) %>% 
@@ -233,11 +306,13 @@ p <-atribuicoes %>%
     coord_flip()
 
 ggplotly(p,tooltip = "text") %>%
-    layout(autosize = F)
+    layout(autosize = F, margin = m)
 
 ```
 
-### Com duas dimensões
+* Discutivelmente, **O principe da persia areias do tempo** poderia exigir um grupo para si próprio.
+
+## Com duas dimensões
 
 ```{r}
 agrupamento_h_2d = filmes %>%
