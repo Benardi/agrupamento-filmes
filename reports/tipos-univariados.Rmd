@@ -54,12 +54,21 @@ filmes %>%
 ### Bilheteria
 
 ```{r}
-filmes %>% 
-    ggplot(aes(x = ano, y = bilheteria)) + 
+p <- filmes %>%
+    ggplot(aes(x = ano, 
+               y = bilheteria,
+               text = paste("Filme:",filme,
+                            "\nBilheteria:",
+                            bilheteria,"m",
+                            "\nAno:",ano))) + 
     geom_point(size = 4, color = paleta[1]) +
     labs(y = "Bilheteria", x = "Ano de lançamento")
+
+ggplotly(p, tooltip = "text") %>%
+    layout(autosize = F)
 ```
 
+* Bilheteria e ano de lançamento 
 
 
 ```{r}
@@ -98,11 +107,19 @@ ggplotly(p, tooltip="text") %>%
 ### Avaliação
 
 ```{r}
-filmes %>% 
-    ggplot(aes(x = ano, y = avaliacao)) + 
+p <- filmes %>% 
+    ggplot(aes(x = ano, 
+               y = avaliacao,
+                text = paste("Filme:",filme,
+                            "\nAvaliação:",
+                            avaliacao,
+                            "\nAno:",ano))) + 
     geom_point(size = 4, color = paleta[1])  +
     scale_y_continuous(limits = c(0, 100)) +
     labs(y = "Avaliação RT", x = "Ano de lançamento")
+
+ggplotly(p, tooltip = "text") %>%
+    layout(autosize = F)
 ```
 
 ```{r}
