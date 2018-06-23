@@ -337,7 +337,7 @@ ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F) +
 ```
 
 * Passar de 4 para 3 grupos representa pouca variação em termos de dissimilaridade
-* Passar de 3 para 2 grupos apresenta um aumento relativo de dissimilaridade substancial, portanto 3 ou 4 grupos parece ser uma boa escolha.
+* Passar de 3 para 2 grupos apresenta um aumento relativo de dissimilaridade substancial, portanto de 6 até 3 grupos parece ser uma boa escolha em termos de dendrograma.
 
 ```{r}
 filmes2 <- filmes %>%
@@ -353,13 +353,20 @@ plota_hclusts_2d(agrupamento_h_2d,
     labs(y = "Bilheteria", x = "Avaliação", title = "Agrupamento com Duas Dimensões")
 ```
 
-* A escolha por 4 grupos parece ser apropriada, por refletir tanto questões de bilheteria como de avaliação. Em acordo com o que interpretamos no dendrograma **optaremos por 4 grupos.** 
+* A escolha por 5 grupos parece ser apropriada, por refletir tanto questões de bilheteria como de avaliação. **Optaremos por 5 grupos** pelas seguintes razões (Grupos mencionados no agrupamento de 5 grupos): 
+    * Os $\color{magenta}{\text{4 filmes de melhores avaliações}}$ estão bem próximos uns dos outros e sugerem um grupo.
+    * Os $\color{#7C3F7C}{\text{3 filmes de baixas bilheterias e baixas avaliações}}$ estão bem distantes do resto dos filmes e sugerem um grupo.
+    * Os $\color{#16A085}{\text{4 filmes de baixa bilheteria e boas avaliações}}$ estão bem próximos uns dos outros e sugerem um grupo.
+    * Os $\color{green}{\text{2 filmes de altíssima bilheteria e baixíssima avaliação}}$ estão bem distantes do resto dos filmes e sugerem um grupo.
+    * Os $\color{#CF5300}{\text{6 filmes centrais/medianos em termos de bilheteria/avaliação}}$ estão bem próximos uns dos outros e sugerem um grupo.
+    
+    
 
 ```{r}
 atribuicoes = get_grupos(agrupamento_h_2d, num_grupos = 1:6)
 
 atribuicoes = atribuicoes %>% 
-    filter(k == 4) %>%
+    filter(k == 5) %>%
     mutate(filme = label) %>% 
     left_join(filmes, by = "filme")
 
@@ -382,21 +389,27 @@ ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 ```
 
-* $\color{green}{\text{Grupo 1 (Oddball):}}$ Filmes em geral _bem recebidos pela crítica porém mal recebidos pelo público_, o que se reflete no seu baixo arrecadamento.
+* $\color{#16A085}{\text{Grupo 1 (Oddball):}}$ Filmes em geral _bem recebidos pela crítica porém mal recebidos pelo público_, o que se reflete no seu baixo arrecadamento.
     * **Stronger**: Filme biográfico sobre 'Jeff Bauman', vítima do atentado de Boston que perdeu ambas as pernas na explosão. O filme foi muito bem recebido pelos críticos que o elogiaram por ser bem executado, comovente e por focar numa história de superação ao invés de usar a tragédia para alimentar a paranóia em cima do terrorismo. O filme porém foi um fracasso em termos de bilheteria.
 
 <br/>
 
-* $\color{#CF5300}{\text{Grupo 2 (Sessão da Tarde):}}$ Filmes em geral _não tão bem recebidos pela crítica e mais formulaicos_. Em termos de bilheteria a maior parte deles foi baixa mas o filme se pagou, com duas exceções que arrecadaram melhor ('Prince of Persia: The Sands of Time' e 'The Day After Tomorrow'). Para esse grupo existe uma curiosidade, para a _maioria_ dos filmes desse grupo quanto maior o arrecadamento menor a avaliação.
-    * **Prince of Persia: The Sands of Time**: Baseado no jogo de mesmo nome, este jogo uma referência em qualidade e inovação. O filme resultou em comentários decepcionados tanto de críticos e fãs que não falharam em contribuir pro arrecadamento do filme.
+* $\color{#CF5300}{\text{Grupo 2 (Sessão da Tarde):}}$ Filmes em geral _não tão bem recebidos pela crítica e mais formulaicos_. Em termos de bilheteria a maior parte deles foi baixa mas o filme se pagou.
+    * **Life**: Filme no gênero ficção científica espacial, teve um arrecadamento não muito expressivo
+assim como críticas igualmente pouco entusiasmadas. Foi considerado por muitos bem executados porém pouco inovativo.
 
 <br/>
 
-* $\color{purple}{\text{Grupo 3 (Demolition of a budget):}}$ Filmes em geral _mal recebidos pela crítica e pelo público_, o que se reflete no seu baixo arrecadamento e avaliações. 
+* $\color{#7C3F7C}{\text{Grupo 3 (Demolition of a budget):}}$ Filmes em geral _mal recebidos pela crítica e pelo público_, o que se reflete no seu baixo arrecadamento e avaliações. 
     * **Demolition**: Neste filme Jake atua no papel de um homem que volta ao trabalho depois de perder a esposa e encontra contato humano em uma atendente de telemarketing ao reclamar de uma vending machine. O filme foi um fracasso em termos de arrecadamento assim como em termos de crítica. O filme teve seu script apontado como grande problema, esse foi descrito como 'tentando afetar profundidade' e anti-carismático.
     
 <br/>
 
-* $\color{magenta}{\text{Grupo 4 (Brokeback Mountain):}}$ Filmes _aclamados pela crítica_ e de faturamento decente ou de  sucesso, os filmes dese grupo são de tom mais sério tratando de assuntos significativos e geradores de controvérsia (assassinatos em série verídicos, não heterossexualidade, terrorismo.. ). 
-    * **Brokeback Mountain**: Provavelmente a melhor atuação de Jake Gyllenhaal até o momento, esse filme rendeu a Jake uma indicação ao Oscar e levantou muita controvérsia por conter uma cena de sexo entre pessoas do mesmo sexo. A Academia (responsável por escolher os vencedores do Oscar) foi acusada de homofobia por não escolher esse filme como o ganhador de Melhor Fotografia, ainda assim Brokeback Mountain ganhou mais ganhou 141 prêmios e 128 nominações de acordo com o IMDB. O filme foi considerado um sucesso tanto em faturamento como em avaliação.
+* $\color{magenta}{\text{Grupo 4 (Brokeback Mountain):}}$ Filmes _aclamados pela crítica_ e de faturamento decente ou de  sucesso, os filmes desse grupo são de tom mais sério tratando de assuntos significativos e geradores de controvérsia (assassinatos em série verídicos, não heterossexualidade, terrorismo.. ). 
+    * **Brokeback Mountain**: Provavelmente a melhor atuação de Jake Gyllenhaal até o momento, esse filme rendeu a Jake uma indicação ao Oscar e levantou muita controvérsia por conter uma cena de sexo entre pessoas do mesmo sexo. A Academia (responsável por escolher os vencedores do Oscar) foi acusada de homofobia por não escolher esse filme como o ganhador de Melhor Fotografia, ainda assim Brokeback Mountain ganhou outros 141 prêmios e 128 nominações de acordo com o IMDB. O filme foi considerado um sucesso tanto em faturamento como em avaliação.
+
+<br/>
+
+* $\color{green}{\text{Grupo 5 (BlockBusters):}}$ Filmes em que Jack atuou que os críticos não gostaram lá muito mas que excederam em bilheteria, com uma arrecadação girando na casa da centena de milhões de dólares.  
+    * **Prince of Persia: The Sands of Time**: Baseado no jogo de mesmo nome, jogo que ainda é pra muitos uma referência em qualidade e inovação. O filme resultou em comentários decepcionados tanto de críticos e fãs, os quais curiosamente não falharam em contribuir pro arrecadamento do filme.
     
