@@ -3,11 +3,11 @@ title: "Tipos de filme de Jake Gyllenhaal"
 author: "José Benardi de Souza Nunes"
 date: "22/05/2018"
 output:
-  html_notebook:
-    toc: yes
-    toc_float: yes
   html_document:
     df_print: paged
+    toc: yes
+    toc_float: yes
+  html_notebook:
     toc: yes
     toc_float: yes
 ---
@@ -18,7 +18,7 @@ output:
 
 > Análise exploratória de dados do [RottenTomatoes](https://www.rottentomatoes.com/) sobre o ator Jake Gyllenhaal. O código empregado na extração dos dados aqui analizados e a descrição de como o usar encontra-se no  [repositório origem](https://github.com/Benardi/agrupamento-filmes/) deste relatório.
 
-* Entradas que não contêm dados sobre bilheteria foram ignorados.
+* Entradas que não contêm dados sobre bilheteria foram ignoradas.
 
 <br>
 
@@ -337,7 +337,7 @@ ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F) +
 ```
 
 * Passar de 4 para 3 grupos representa pouca variação em termos de dissimilaridade
-* Passar de 3 para 2 grupos apresentar um aumento relativo de dissimilaridade substancial, portanto 3 ou 4 grupos parece ser uma boa escolha.
+* Passar de 3 para 2 grupos apresenta um aumento relativo de dissimilaridade substancial, portanto 3 ou 4 grupos parece ser uma boa escolha.
 
 ```{r}
 filmes2 <- filmes %>%
@@ -382,21 +382,21 @@ ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 ```
 
-* **Grupo 1 (Oddball)**: Filmes em geral _bem recebidos pela crítica porém mal recebidos pelo público_, o que se reflete no seu baixo arrecadamento.
+* $\color{green}{\text{Grupo 1 (Oddball):}}$ Filmes em geral _bem recebidos pela crítica porém mal recebidos pelo público_, o que se reflete no seu baixo arrecadamento.
     * **Stronger**: Filme biográfico sobre 'Jeff Bauman', vítima do atentado de Boston que perdeu ambas as pernas na explosão. O filme foi muito bem recebido pelos críticos que o elogiaram por ser bem executado, comovente e por focar numa história de superação ao invés de usar a tragédia para alimentar a paranóia em cima do terrorismo. O filme porém foi um fracasso em termos de bilheteria.
 
 <br/>
 
-* **Grupo 2 (Sessão da Tarde)**: Filmes em geral _não tão bem recebidos pela crítica e mais formulaicos_. Em termos de bilheteria a maior parte deles foi baixa mas o filme se pagou, com duas exceções que arrecadaram melhor ('Prince of Persia: The Sands of Time' e 'The Day After Tomorrow'). Para esse grupo existe uma curiosidade, para a _maioria_ dos filmes desse grupo quanto maior o arrecadamento menor a avaliação.
+* $\color{#CF5300}{\text{Grupo 2 (Sessão da Tarde):}}$ Filmes em geral _não tão bem recebidos pela crítica e mais formulaicos_. Em termos de bilheteria a maior parte deles foi baixa mas o filme se pagou, com duas exceções que arrecadaram melhor ('Prince of Persia: The Sands of Time' e 'The Day After Tomorrow'). Para esse grupo existe uma curiosidade, para a _maioria_ dos filmes desse grupo quanto maior o arrecadamento menor a avaliação.
     * **Prince of Persia: The Sands of Time**: Baseado no jogo de mesmo nome, este jogo uma referência em qualidade e inovação. O filme resultou em comentários decepcionados tanto de críticos e fãs que não falharam em contribuir pro arrecadamento do filme.
 
 <br/>
 
-* **Grupo 3 (Demolition ~~of a budget~~)**: Filmes em geral _mal recebidos pela crítica e pelo público_, o que se reflete no seu baixo arrecadamento e avaliações. 
+* $\color{purple}{\text{Grupo 3 (Demolition of a budget):}}$ Filmes em geral _mal recebidos pela crítica e pelo público_, o que se reflete no seu baixo arrecadamento e avaliações. 
     * **Demolition**: Neste filme Jake atua no papel de um homem que volta ao trabalho depois de perder a esposa e encontra contato humano em uma atendente de telemarketing ao reclamar de uma vending machine. O filme foi um fracasso em termos de arrecadamento assim como em termos de crítica. O filme teve seu script apontado como grande problema, esse foi descrito como 'tentando afetar profundidade' e anti-carismático.
     
 <br/>
 
-* **Grupo 4 (Brokeback Mountain)**: Filmes _aclamados pela crítica_ e de faturamento decente ou de  sucesso, os filmes dese grupo são de tom mais sério tratando de assuntos significativos e geradores de controvérsia (assassinatos em série verídicos, não heterossexualidade, terrorismo.. ). 
+* $\color{magenta}{\text{Grupo 4 (Brokeback Mountain):}}$ Filmes _aclamados pela crítica_ e de faturamento decente ou de  sucesso, os filmes dese grupo são de tom mais sério tratando de assuntos significativos e geradores de controvérsia (assassinatos em série verídicos, não heterossexualidade, terrorismo.. ). 
     * **Brokeback Mountain**: Provavelmente a melhor atuação de Jake Gyllenhaal até o momento, esse filme rendeu a Jake uma indicação ao Oscar e levantou muita controvérsia por conter uma cena de sexo entre pessoas do mesmo sexo. A Academia (responsável por escolher os vencedores do Oscar) foi acusada de homofobia por não escolher esse filme como o ganhador de Melhor Fotografia, ainda assim Brokeback Mountain ganhou mais ganhou 141 prêmios e 128 nominações de acordo com o IMDB. O filme foi considerado um sucesso tanto em faturamento como em avaliação.
     
