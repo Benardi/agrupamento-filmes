@@ -57,6 +57,8 @@ filmes %>%
 
 ## Bilheteria
 
+* Dados de bilheteria se referem ao arrecadamento dentro dos Estados Unidos.
+
 ```{r}
 p <- filmes %>%
     ggplot(aes(x = ano, 
@@ -72,7 +74,7 @@ ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 ```
 
-* Entre os filmes em que Jake atuou um foge aos outros em termos de faturamento, o memóravel blockbuster **"O dia depois de amanhã"** lançado em 2004.
+* Entre os filmes em que Jake atuou um foge aos outros em termos de faturamento, o filme  **"The Day After Tomorrow"** lançado em 2004.
 
 * É possível perceber uma tendência de queda no faturamento dos filmes em que Jake atuou após 2013.
 
@@ -87,7 +89,7 @@ filmes %>%
 
 ```
 
-* Vemos claramente a disparidade entre **"O dia depois de amanhã"**  e os outros filmes.
+* Vemos claramente a disparidade entre **"The Day After Tomorrow"**  e os outros filmes.
 
 * Nenhum valor fora do domínio de valores esperado, e.g. valores negativos.
 
@@ -108,7 +110,7 @@ ggplotly(p, tooltip="text") %>%
 
 * Separar os filmes entre os de bilheteria abaixo e acima de 50 milhões parece uma abordagem razoável.
 
-* **"O dia depois de amanhã"** aparenta formar um exército de um filme só. O que nos daria 3 grupos. 
+* **"The Day After Tomorrow"** aparenta formar um exército de um filme só. O que nos daria 3 grupos. 
 
 ## Avaliação
 
@@ -214,7 +216,7 @@ atribuicoes %>%
     geom_jitter(width = .02, height = 0, size = 1.6, alpha = .6) + 
     facet_wrap(~ paste(k, " grupos")) + 
     scale_color_brewer(palette = "Dark2") +
-    labs(y = "Bilheteria (milhões)", x = "", title = "Agrupamento com 1 Dimensão")
+    labs(y = "Bilheteria (milhões)", x = "", title = "Agrupamento por Bilheteria")
 
 ```
 
@@ -246,7 +248,7 @@ ggplotly(p,tooltip = "text") %>%
 
 ```
 
-* **O dia depois de amanhã** exigiu um grupo para si, como era esperado.
+* **The Day After Tomorrow** exigiu um grupo para si, como era esperado.
 
 <br>
 
@@ -279,7 +281,7 @@ atribuicoes %>%
     geom_jitter(width = .02, height = 0, size = 1.6, alpha = .6) + 
     facet_wrap(~ paste(k, " grupos")) + 
     scale_color_brewer(palette = "Dark2") +
-    labs(y = "Avaliação RT", x = "", title = "Agrupamento com 1 Dimensão")
+    labs(y = "Avaliação RT", x = "", title = "Agrupamento por Avaliação")
 
 ```
 
@@ -310,11 +312,13 @@ ggplotly(p,tooltip = "text") %>%
 
 ```
 
-* Discutivelmente, **O principe da persia areias do tempo** poderia exigir um grupo para si próprio.
+* Discutivelmente, **Prince of Persia: The Sands of Time** poderia exigir um grupo para si próprio.
 
-## Com duas dimensões
+<br>
 
-```{r}
+## Duas dimensões
+
+```{r, warning=FALSE}
 agrupamento_h_2d = filmes %>%
    mutate(bilheteria = log10(bilheteria)) %>%
    mutate_at(vars("avaliacao", "bilheteria"), funs(scale)) %>%
@@ -324,8 +328,13 @@ agrupamento_h_2d = filmes %>%
    hclust(method = "ward.D")
 
 ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F) +
-    labs(y = "Dissimilaridade", x = "", title = "Dendrograma")
+    labs(y = "Dissimilaridade", x = "", title = "Dendrograma") +
+    geom_hline(aes(yintercept = 4),color="red")
+
 ```
+
+* Passar de 4 para 3 grupos representa pouca variação em termos de dissimilaridade
+* Passar de 3 para 2 grupos apresentar um aumento relativo de dissimilaridade substancial, portanto 3 ou 4 grupos parece ser uma boa escolha.
 
 ```{r}
 filmes2 <- filmes %>%
@@ -338,14 +347,16 @@ plota_hclusts_2d(agrupamento_h_2d,
                 ks = 1:6,
                 palette = "Dark2") + 
     scale_y_log10() +
-    labs(y = "Bilheteria", x = "Avaliação", title = "Clusterização com Duas Dimensões")
+    labs(y = "Bilheteria", x = "Avaliação", title = "Agrupamento com Duas Dimensões")
 ```
+
+* A escolha por 4 grupos parece ser apropriada, por refletir tanto questões de bilheteria como de avaliação. Em acordo com o que interpretamos no dendograma **optaremos por 4 grupos.** 
 
 ```{r}
 atribuicoes = get_grupos(agrupamento_h_2d, num_grupos = 1:6)
 
 atribuicoes = atribuicoes %>% 
-    filter(k == 3) %>%
+    filter(k == 4) %>%
     mutate(filme = label) %>% 
     left_join(filmes, by = "filme")
 
@@ -367,3 +378,33 @@ p <- atribuicoes %>%
 ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 ```
+
+>**Grupo 1 (Oddball)**: Filmes em geral _bem recebidos pela crítica porém mal recebidos pelo público_, o que se reflete no seu baixo arrecadamento.
+> <br/><br/> 
+>
+> * **Stronger**: Filme biográfico sobre 'Jeff Bauman', vítima do atentado de Boston que perdeu ambas as pernas na explosão. O filme foi muito bem recebido pelos críticos que o elogiaram por ser bem executado, comovente e por focar numa história de superação ao invés de usar a tragédia para alimentar a paranóia em cima do terrorismo. O filme porém foi um fracasso em termos de bilheteria.
+
+> **Grupo 2 (Sessão da Tarde)**: Filmes em geral _não tão bem recebidos pela crítica e mais formulaicos_. Em termos de bilheteria a maior parte deles foi baixa mas o filme se pagou, com duas exceções que arrecadaram melhor ('Prince of Persia: The Sands of Time' e 'The Day After Tomorrow'). Para esse grupo existe uma curiosidade, para a _maioria_ dos filmes desse grupo quanto maior o arrecadamento menor a avaliação.
+> <br/><br/> 
+>
+> * **Prince of Persia: The Sands of Time**: Baseado no jogo de mesmo nome, este jogo uma referência em qualidade e inovação. O filme resultou em comentários decepcionados tanto de críticos e fãs que não falharam em contribuir pro arrecadamento do filme.
+> <br/><br/> 
+>
+> * **Life**: Filme no gênero ficção científica espacial, teve um arrecadamento não muito expressivo
+assim como críticas igualmente pouco entusiasmadas. Foi considerado por muitos bem executados porém pouco inovativo.
+
+>**Grupo 3 (Demolition ~~of a budget~~)**: Filmes em geral _mal recebidos pela crítica e pelo público_, o que se reflete no seu baixo arrecadamento e avaliações. 
+> <br/><br/> 
+>
+> * **Demolition**: Neste filme Jake atua no papel de um homem que volta ao trabalho depois de perder a esposa e encontra contato humano em uma atendente de telemarketing ao reclamar de uma vending machine. O filme foi um fracasso em termos de arrecadamento assim como em termos de crítica. O filme teve seu script apontado como grande problema, esse foi descrito como 'tentando afetar profundidade' e anti-carismático.
+
+> **Grupo 4 (Brokeback Mountain)**: Filmes _aclamados pela crítica_ e de faturamento decente ou de  sucesso, os filmes dese grupo são de tom mais sério tratando de assuntos significativos e geradores de controvérsia (assassinatos em série verídicos, não heterossexualidade, terrorismo.. ). 
+> <br/><br/> 
+>
+> * **Brokeback Mountain**: Provavelmente a melhor atuação da carreira de Jake Gyllenhaal até o momento da escrita desse texto, esse filme meritou a Jake uma indicação ao Oscar e levantou muita controvérsia por conter uma cena de sexo entre pessoas do mesmo sexo. A Academia (responsável por escolher os vencedores do Oscar) foi acusada de homofobia por não escolher esse filme como o ganhador de Melhor Fotografia, ainda assim Brokeback Mountain ganhou mais ganhou 141 prêmios e 128 nominações de acordo com o IMDB. O filme foi considerado um sucesso tanto em faturamento como em avaliação.
+> <br/><br/>
+>
+> * **Zodiac**: O filme gira em torno da onda de assassinatos feitas pelo notório Zodiac, e em particular na reação da imprensa e da polícia à esses eventos. Mais austero do que o esperado, o filme teve um faturamento decente mas aquém do esperado para filmes do seu gênero. Em geral o filme foi ofuscado por outros títulos como "No Country for Old Men" em termos de bilheteria mas foi muito bem recebido pela crítica.
+
+
+    
