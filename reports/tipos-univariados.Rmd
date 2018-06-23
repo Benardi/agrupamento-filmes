@@ -1,6 +1,7 @@
 ---
 title: "Tipos de filme de Jake Gyllenhaal"
 author: "José Benardi de Souza Nunes"
+date: "22/05/2018"
 output:
   html_notebook:
     toc: yes
@@ -10,6 +11,8 @@ output:
     toc: yes
     toc_float: yes
 ---
+
+<br/><br/>
 
 # Introdução
 
@@ -221,7 +224,7 @@ atribuicoes %>%
 ```
 
 * A divisão em 4 grupos parece ser mais apropriada que a divisão em 3 grupos.
-    * O cluster de filmes na base do gráfico aparenta exigir um grupo próprio (Na divisão em 4 grupos seria o grupo 1). 
+    * O cluster de filmes na base do gráfico aparenta exigir um grupo próprio (Na divisão em 4 grupos o grupo mencionado seria o grupo 1). 
 
 ```{r}
 k_escolhido = 4
@@ -285,7 +288,7 @@ atribuicoes %>%
 
 ```
 
-* Visualmente a divisão em três grupos parece de fato ser apropriada, o que está em acordo com o dendograma.
+* Visualmente a divisão em três grupos parece de fato ser apropriada, o que está em acordo com o dendrograma.
 
 ```{r}
 k_escolhido = 3
@@ -350,7 +353,7 @@ plota_hclusts_2d(agrupamento_h_2d,
     labs(y = "Bilheteria", x = "Avaliação", title = "Agrupamento com Duas Dimensões")
 ```
 
-* A escolha por 4 grupos parece ser apropriada, por refletir tanto questões de bilheteria como de avaliação. Em acordo com o que interpretamos no dendograma **optaremos por 4 grupos.** 
+* A escolha por 4 grupos parece ser apropriada, por refletir tanto questões de bilheteria como de avaliação. Em acordo com o que interpretamos no dendrograma **optaremos por 4 grupos.** 
 
 ```{r}
 atribuicoes = get_grupos(agrupamento_h_2d, num_grupos = 1:6)
