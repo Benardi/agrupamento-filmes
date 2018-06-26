@@ -3,11 +3,11 @@ title: "Tipos de filme de Jake Gyllenhaal"
 author: "José Benardi de Souza Nunes"
 date: "22/05/2018"
 output:
-  html_notebook:
-    toc: yes
-    toc_float: yes
   html_document:
     df_print: paged
+    toc: yes
+    toc_float: yes
+  html_notebook:
     toc: yes
     toc_float: yes
 ---
@@ -397,6 +397,10 @@ ggplotly(p, tooltip = "text") %>%
 
 <br>
 
+***
+
+<br>
+
 ### Quais os nomes dos grupos? 
 
 <br>
@@ -418,6 +422,8 @@ $\color{magenta}{\text{Grupo 4 (Broke Records and Awards):}}$ Filmes _aclamados 
 <br/>
 
 $\color{green}{\text{Grupo 5 (BlockBusters):}}$ Filmes em que Jack atuou que os críticos não gostaram lá muito mas que excederam em bilheteria, com uma arrecadação girando na casa da centena de milhões de dólares. O termo BlockBuster é usualmente dado a filmes que lotam as salas de cinema, que é o caso dos filmes pertencentes a esse grupo.
+
+<br>
 
 ***
 
