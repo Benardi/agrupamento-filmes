@@ -203,7 +203,7 @@ ggdendrogram(agrupamento_h, rotate = T, size = 2, theme_dendro = F) +
     values=c("#56B4E9", "#FF9999"))
 ```
 
-* In terms of Dendogram the separation in four and three groups seems apropriate, given that the increase in dissimilarity from 4 to 3 groups doesn't seem to be substantial.
+* In terms of Dendrogram the separation in four and three groups seems apropriate, given that the increase in dissimilarity from 4 to 3 groups doesn't seem to be substantial.
 * Cut made for 4 groups
 
 ```{r}
@@ -270,7 +270,7 @@ ggdendrogram(agrupamento_h, rotate = T, size = 2, theme_dendro = F) +
     geom_hline(aes(yintercept = 30),color="red")
 ```
 
-* In terms of Dendogram the **division in three groups seems the most appropriate**, given that the increase in dissimilarity becomes substantial when we go from 3 to 2 groups.
+* In terms of Dendrogram the **division in three groups seems the most appropriate**, given that the increase in dissimilarity becomes substantial when we go from 3 to 2 groups.
 
 ```{r}
 atribuicoes = get_grupos(agrupamento_h, num_grupos = 1:6)
@@ -288,7 +288,7 @@ atribuicoes %>%
 
 ```
 
-* Visually the division in three groups seems appropriate in accordance with the dendogram.
+* Visually the division in three groups seems appropriate in accordance with the dendrogram.
 
 ```{r}
 k_escolhido = 3
@@ -324,7 +324,7 @@ ggplotly(p,tooltip = "text") %>%
 
 <br>
 
-### Quantos grupos devemos escolher? 
+### How many groups should we choose? 
 
 <br>
 
@@ -338,13 +338,13 @@ agrupamento_h_2d = filmes %>%
    hclust(method = "ward.D")
 
 ggdendrogram(agrupamento_h_2d, rotate = TRUE, theme_dendro = F) +
-    labs(y = "Dissimilaridade", x = "", title = "Dendrograma") +
+    labs(y = "Dissimilarity", x = "", title = "Dendrogram") +
     geom_hline(aes(yintercept = 4),color="red")
 
 ```
 
-* Passar de 4 para 3 grupos representa pouca variação em termos de dissimilaridade
-* Passar de 3 para 2 grupos apresenta um aumento relativo de dissimilaridade substancial, portanto de 6 até 3 grupos parece ser uma boa escolha em termos de dendrograma.
+* Going from 4 to 3 groups represents little variation in terms of dissimilarity
+* Going from 3 to 2 groups represents a relatively substantial increase in dissimilarity, therefore from 6 to 3 groups seems a good choice in terms of dendrogram.
 
 ```{r}
 filmes2 <- filmes %>%
@@ -356,18 +356,18 @@ plota_hclusts_2d(agrupamento_h_2d,
                 linkage_method = "ward.D", 
                 ks = 1:6,
                 palette = "Dark2") + 
+    facet_wrap(~ paste(k, " groups")) +
     scale_y_log10() +
-    labs(y = "Bilheteria", x = "Avaliação", title = "Agrupamento com Duas Dimensões")
+    guides(color=guide_legend(title="group")) +
+    labs(y = "Box Office", x = "Rating", title = "Grouping with two dimensions")
 ```
 
-* A escolha por 5 grupos parece ser apropriada, por refletir tanto questões de bilheteria como de avaliação. **Optaremos por 5 grupos** pelas seguintes razões (Grupos mencionados no agrupamento de 5 grupos): 
-    * Os $\color{magenta}{\text{4 filmes de melhores avaliações}}$ estão bem próximos uns dos outros e sugerem um grupo.
-    * Os $\color{#7C3F7C}{\text{3 filmes de baixas bilheterias e baixas avaliações}}$ estão bem distantes do resto dos filmes e sugerem um grupo.
-    * Os $\color{#16A085}{\text{4 filmes de baixa bilheteria e boas avaliações}}$ estão bem próximos uns dos outros e sugerem um grupo.
-    * Os $\color{green}{\text{2 filmes de altíssima bilheteria e baixíssima avaliação}}$ estão bem distantes do resto dos filmes e sugerem um grupo.
-    * Os $\color{#CF5300}{\text{6 filmes centrais/medianos em termos de bilheteria/avaliação}}$ estão bem próximos uns dos outros e sugerem um grupo.
-    
-    
+* The choice of 5 groups seems appropriate, as it reflects matters of Box Office as matters of Ratings. **We'll choose 5 groups** for the following reasons (Groups mentioned on the 5 groups divisition): 
+    * The $\color{magenta}{\text{4 best rated movies}}$ are very close to each other and suggest a group.
+    * The $\color{#7C3F7C}{\text{3 movies of small Box Office and low ratings}}$ are very dissimilar the rest of the movies and suggest a group.
+    * The $\color{#16A085}{\text{4 movies of small Box Office and high ratings}}$ are close to each other and suggest a group.
+    * The $\color{green}{\text{2 movies of huge Box Office and very low ratings}}$ are very far from the rest of the movies and suggest a group.
+    * The $\color{#CF5300}{\text{6 central/median movies in terms of Box Office/Rating}}$ are very close to each other and suggest a group.
 
 ```{r}
 atribuicoes = get_grupos(agrupamento_h_2d, num_grupos = 1:6)
@@ -382,14 +382,15 @@ p <- atribuicoes %>%
                y = bilheteria,
                colour = grupo,
                text = paste(
-                    "Filme:", filme,
-                    "\nBilheteria:", bilheteria,"m\n",
-                    "Avaliação:", avaliacao))) + 
+                    "Movie:", filme,
+                    "\nBox Office:", bilheteria,"m\n",
+                    "Rating:", avaliacao))) + 
     geom_jitter(width = .02, height = 0, size = 3, alpha = .6) + 
-    facet_wrap(~ paste(k, " grupos")) + 
+    facet_wrap(~ paste(k, " groups")) + 
     scale_color_brewer(palette = "Dark2") +
     scale_y_log10() +
-    labs(y = "Bilheteria", x = "Avaliação RT")
+    guides(color=guide_legend(title="group")) +
+    labs(y = "Box Office", x = "Rating RT")
 
 
 ggplotly(p, tooltip = "text") %>%
@@ -402,27 +403,27 @@ ggplotly(p, tooltip = "text") %>%
 
 <br>
 
-### Quais os nomes dos grupos? 
+### What are the name of the groups? 
 
 <br>
 
-$\color{#16A085}{\text{Grupo 1 (Oddball):}}$ Filmes em geral _bem recebidos pela crítica porém mal recebidos pelo público_, o que se reflete no seu baixo arrecadamento. O nome Oddball parte do interese de pessoas que se consideram excêntricas em buscarem filmes nesse perfil para revalidarem o sentimento de exclusividade.
+$\color{#16A085}{\text{Group 1 (Oddball):}}$ _Movies overall well received by the public_, which reflected on its low revenue. The name Oddball comes from the later interest on the movies from people who consider themselves excentric not rarely to revalidate their sense of exclusivity.
 
 <br/>
 
-$\color{#CF5300}{\text{Grupo 2 (Sessão da Tarde):}}$ Filmes em geral _não tão bem recebidos pela crítica e mais formulaicos_. Em termos de bilheteria a maior parte deles foi baixa mas o filme se pagou.O nome Sessã da Tarde parte da ideia de que filmes mais formulaicos e inexpressivos em termos de bilheteria como os do grupo povoarem esse horário da tv brasileira.
+$\color{#CF5300}{\text{Group 2 (Matinee):}}$ Movies overall _not so well received by the critics and more formulaic_. In terms of box office most of them had low revenue but the movie paid itself. The name Matinee comes from the idea of that movies that did not perform that well or stopped being the hot topic for a long time occupying being aired by that time.
 
 <br/>
 
-$\color{#7C3F7C}{\text{Grupo 3 (Demolition of a budget):}}$ Filmes em geral _mal recebidos pela crítica e pelo público_, o que se reflete no seu baixo arrecadamento e avaliações. O nome do grupo parte do baxissimo rendimento dos filmes em termos financeiros, a "demolição" do dinheiro investido na produção do filme. 
+$\color{#7C3F7C}{\text{Group 3 (Demolition of a budget):}}$ Movies overall _poorly received by both critics and public_, which reflected on its small Box Office and low ratings. The name of the group is a wordplay with the very small revenue rendered by the movies, which "demolished" the investment of those who betted in them. 
 
 <br/>
 
-$\color{magenta}{\text{Grupo 4 (Broke Records and Awards):}}$ Filmes _aclamados pela crítica_ e de faturamento decente ou de  sucesso, os filmes desse grupo são de tom mais sério tratando de assuntos significativos e geradores de controvérsia (assassinatos em série verídicos, não heterossexualidade, terrorismo.. ). O nome do grupo é um trocadilho com o nome de um dos filmes e a quantidade exorbitante de prêmios que esse filme ganhou. 
+$\color{magenta}{\text{Grupo 4 (Broke Records and Awards):}}$ Movies _acclaimed by critics_ and whose box office was either successfull or at least decent. The movies in this group have a more serious tone, talking of serious matter that frequently create controversy (serial murders, non heterosexuality, terrorism..). The name of the group is a word play with the name of one of its movies and the sheer amount of prizes this particular movie won. 
 
 <br/>
 
-$\color{green}{\text{Grupo 5 (BlockBusters):}}$ Filmes em que Jack atuou que os críticos não gostaram lá muito mas que excederam em bilheteria, com uma arrecadação girando na casa da centena de milhões de dólares. O termo BlockBuster é usualmente dado a filmes que lotam as salas de cinema, que é o caso dos filmes pertencentes a esse grupo.
+$\color{green}{\text{Grupo 5 (BlockBusters):}}$ Movies in which Jack acted that the critics didn't like that much but who collected a huge box office, with a revenue on the scale of hundreds of millions. The term BlockBuster is usually given to movies who attract crowds to the movie theaters, which is the case of the movies who belong to this group.
 
 <br>
 
