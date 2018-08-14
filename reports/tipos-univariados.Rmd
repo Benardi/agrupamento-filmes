@@ -1,13 +1,13 @@
 ---
-title: "Tipos de filme de Jake Gyllenhaal"
+title: "Jake Gyllenhaal's type of movies"
 author: "José Benardi de Souza Nunes"
 date: "22/05/2018"
 output:
-  html_document:
-    df_print: paged
+  html_notebook:
     toc: yes
     toc_float: yes
-  html_notebook:
+  html_document:
+    df_print: paged
     toc: yes
     toc_float: yes
 ---
@@ -16,9 +16,9 @@ output:
 
 # Introdução
 
-> Análise exploratória de dados do [RottenTomatoes](https://www.rottentomatoes.com/) sobre o ator Jake Gyllenhaal. O código empregado na extração dos dados aqui analizados e a descrição de como o usar encontra-se no  [repositório origem](https://github.com/Benardi/agrupamento-filmes/) deste relatório.
+> Exploratory data analysis on data from [RottenTomatoes](https://www.rottentomatoes.com/) about actor Jake Gyllenhaal. The code used to mine the data here analyzed and the explanation on how to use it can be found on [this report's repository](https://github.com/Benardi/agrupamento-filmes/) deste relatório.
 
-* Entradas que não contêm dados sobre bilheteria foram ignoradas.
+* Entries that have no infomation about box office were ignored.
 
 <br>
 
@@ -47,6 +47,7 @@ paleta = c("#404E4D",
            "#938BA1",
            "#2D3142",
            "#F4743B")
+set.seed(101)
 ```
 
 # Data Overview
@@ -58,28 +59,28 @@ filmes %>%
     glimpse()
 ```
 
-## Bilheteria
+## Box Office
 
-* Dados de bilheteria se referem ao arrecadamento dentro dos Estados Unidos.
+* Data refers to revenue collected inside the USA.
 
 ```{r}
 p <- filmes %>%
     ggplot(aes(x = ano, 
                y = bilheteria,
-               text = paste("Filme:",filme,
-                            "\nBilheteria:",
+               text = paste("Movie:",filme,
+                            "\nBox Office:",
                             bilheteria,"m",
-                            "\nAno:",ano))) + 
+                            "\nYear:",ano))) + 
     geom_point(size = 4, color = paleta[1]) +
-    labs(y = "Bilheteria", x = "Ano de lançamento")
+    labs(y = "Box Office (MM)", x = "Year of release")
 
 ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 ```
 
-* Entre os filmes em que Jake atuou um foge aos outros em termos de faturamento, o filme  **"The Day After Tomorrow"** lançado em 2004.
+* Among the movies where Jake acted one sets itself apart from others in terms of revenue: The movie **"The Day After Tomorrow"** released in 2004.
 
-* É possível perceber uma tendência de queda no faturamento dos filmes em que Jake atuou após 2013.
+* It's possible to notice a downward trend in the Box Office of the movies where Jake acted after 2013.  
 
 ```{r}
 filmes %>% 
@@ -88,53 +89,52 @@ filmes %>%
                    fill = "grey", color = "black") + 
     geom_rug(size = .5) +
     scale_x_continuous(breaks=seq(0,200,20)) +
-    labs(y = "Frequência Relativa", x = "Bilheteria")
-
+    labs(y = "Relative Frequency", x = "Box Office (MM)")
 ```
 
-* Vemos claramente a disparidade entre **"The Day After Tomorrow"**  e os outros filmes.
+* We see a clear disparity between **"The Day After Tomorrow"** and the rest of the movies.
 
-* Nenhum valor fora do domínio de valores esperado, e.g. valores negativos.
+* No values outside expected domain, e.g. negative values.
 
 ```{r}
 p <- filmes %>% 
     ggplot(aes(x = "",
                y = bilheteria,
                label = filme,
-               text = paste("Filme:",filme,
-                            "\nBilheteria:",
+               text = paste("Movie:",filme,
+                            "\nBox Office:",
                             bilheteria,"m"))) + 
     geom_jitter(width = .05, alpha = .3, size = 3) + 
-    labs(x = "", y="Bilheteria")
+    labs(x = "", y="Box Office (MM)")
 
 ggplotly(p, tooltip="text") %>% 
     layout(autosize = F)
 ```
 
-* Separar os filmes entre os de bilheteria abaixo e acima de 50 milhões parece uma abordagem razoável.
+* Separate movies in those whose Box Office is below 50 millions and those whose Box Office is above that seems a reasonable approach. 
 
-* **"The Day After Tomorrow"** aparenta formar um exército de um filme só. O que nos daria 3 grupos. 
+* **"The Day After Tomorrow"** seems to form a group of its own. Which would give us 3 groups.
 
-## Avaliação
+## Rating
 
 ```{r}
 p <- filmes %>% 
     ggplot(aes(x = ano, 
                y = avaliacao,
-                text = paste("Filme:",filme,
-                            "\nAvaliação:",
+                text = paste("Movie:",filme,
+                            "\nRating:",
                             avaliacao,
-                            "\nAno:",ano))) + 
+                            "\nYear:",ano))) + 
     geom_point(size = 4, color = paleta[1])  +
     scale_y_continuous(limits = c(0, 100)) +
-    labs(y = "Avaliação RT", x = "Ano de lançamento")
+    labs(y = "Rating RT", x = "Year of Release")
 
 ggplotly(p, tooltip = "text") %>%
     layout(autosize = F)
 ```
 
-* Entre 2005 e 2010 Jake participou de uma série de filmes em particular que não agradou os críticos 
-* Não aparenta haver uma tendência particularmente clara em razão do ano de lançamento. 
+* Between 2005 and 2010 Jake participated in a particular series of movies that did not please the critics. 
+* There doesn't seem to exist a particularly clear tendency in the year of release. 
 
 ```{r}
 filmes %>% 
@@ -143,14 +143,12 @@ filmes %>%
                    fill = paleta[3], color = "black") + 
     geom_rug(size = .5) +
     scale_x_continuous(breaks=seq(0,100,10)) +
-    labs(y = "Frequência Relativa", x = "Avaliação RT")
-
+    labs(y = "Relative Frequency", x = "Rating RT")
 ```
 
-* É possível perceber uma quantidade considerável de filmes com notas acima de 80.
+* It's possible to notice a considerable number of movies with ratings above 80.
 
-* Nenhum valor fora do domínio de valores esperado, e.g. valores negativos.
-
+* No values outside expected domain, e.g. negative values.
 
 ```{r}
 p <- filmes %>% 
@@ -167,10 +165,10 @@ ggplotly(p, tooltip = "text") %>%
 
 ```
 
-* Intuitivamente três grupos surgem:
-    * Os filmes com avaliação acima de 80
-    * Os filmes com avaliação entre 55 e 70 
-    * Os filmes com avaliação abaixo de 55
+* Intuitively three groups arise:
+    * The movies with ratings above 80
+    * The movies with ratings between 55 and 70 
+    * The movies with ratings below 55
 
 <br>
 
@@ -178,16 +176,16 @@ ggplotly(p, tooltip = "text") %>%
 
 <br>
 
-# Agrupamento hierárquico
+# Hierarchical Clustering
 
 <br>
 <br>
 
-## Uma dimensão
+## One dimension
 
 <br>
 
-### Bilheteria 
+### Box Office
 
 ```{r}
 agrupamento_h = filmes %>% 
@@ -199,14 +197,14 @@ agrupamento_h = filmes %>%
     hclust(method = "centroid")
 
 ggdendrogram(agrupamento_h, rotate = T, size = 2, theme_dendro = F) +
-    labs(y = "Dissimilaridade", x = "", title = "Dendrograma") +
+    labs(y = "Dissimilarity", x = "", title = "Dendrogram") +
     geom_hline(aes(yintercept = c(20,30), color=c("4 grupos","3 grupos"))) +
-    scale_colour_manual(name="#Grupos",
+    scale_colour_manual(name="#Groups",
     values=c("#56B4E9", "#FF9999"))
 ```
 
-* Em termos de Dendograma a divisão em quatro grupos assim como a divisão em 3 grupos parecem ser apropriadas, dado que o aumento de dissimilaridade de 4 para 3 grupos não aparentar ser substancial.
-*  Corte feito para 4 grupos
+* In terms of Dendogram the separation in four and three groups seems apropriate, given that the increase in dissimilarity from 4 to 3 groups doesn't seem to be substantial.
+* Cut made for 4 groups
 
 ```{r}
 atribuicoes = get_grupos(agrupamento_h, num_grupos = 1:6)
@@ -215,16 +213,16 @@ atribuicoes = atribuicoes %>%
     left_join(filmes, by = c("label" = "filme"))
 
 atribuicoes %>% 
-    ggplot(aes(x = "Filmes", y = bilheteria, colour = grupo)) + 
+    ggplot(aes(x = "Movies", y = bilheteria, colour = grupo)) + 
     geom_jitter(width = .02, height = 0, size = 1.6, alpha = .6) + 
-    facet_wrap(~ paste(k, " grupos")) + 
+    facet_wrap(~ paste(k, " groups")) + 
     scale_color_brewer(palette = "Dark2") +
-    labs(y = "Bilheteria (milhões)", x = "", title = "Agrupamento por Bilheteria")
-
+    labs(y = "Box Office (MM)", x = "", title = "Grouping by Box Office") +
+    guides(color=guide_legend(title="group"))
 ```
 
-* A divisão em 4 grupos parece ser mais apropriada que a divisão em 3 grupos.
-    * O cluster de filmes na base do gráfico aparenta exigir um grupo próprio (Na divisão em 4 grupos o grupo mencionado seria o grupo 1). 
+* The division in 4 groups seems more appropriate than the division in 3 groups.
+    * The movie cluster on the base of chart seems to require its own group (In the 4 groups division the aforementioned group would be the group 1).
 
 ```{r}
 k_escolhido = 4
@@ -237,13 +235,14 @@ p <-atribuicoes %>%
                y = bilheteria,
                colour = grupo,
                text = paste(
-                    "Filme:", reorder(label, bilheteria),
-                    "\nAvaliação:", bilheteria,
-                    "\nGrupo:", grupo))) + 
+                    "Movie:", reorder(label, bilheteria),
+                    "\nRating:", bilheteria,
+                    "\nGroup:", grupo))) + 
     geom_jitter(width = .02, height = 0, size = 3, alpha = .6) + 
-    facet_wrap(~ paste(k, " grupos")) + 
+    facet_wrap(~ paste(k, " groups")) + 
     scale_color_brewer(palette = "Dark2") + 
-    labs(x = "", y = "Avaliação RT") + 
+    labs(x = "", y = "Rating RT") + 
+    guides(color=guide_legend(title="group")) +
     coord_flip()
 
 ggplotly(p,tooltip = "text") %>%
@@ -251,11 +250,11 @@ ggplotly(p,tooltip = "text") %>%
 
 ```
 
-* **The Day After Tomorrow** exigiu um grupo para si, como era esperado.
+* **The Day After Tomorrow** demanded a group for itself, as expected.
 
 <br>
 
-### Avaliação 
+### Rating 
 
 ```{r}
 agrupamento_h = filmes %>% 
@@ -267,11 +266,11 @@ agrupamento_h = filmes %>%
     hclust(method = "ward.D")
 
 ggdendrogram(agrupamento_h, rotate = T, size = 2, theme_dendro = F) +
-    labs(y = "Dissimilaridade", x = "", title = "Dendrograma") +
+    labs(y = "Dissimilarity", x = "", title = "Dendrogram") +
     geom_hline(aes(yintercept = 30),color="red")
 ```
 
-* Em termos de Dendograma a **divisão em três grupos parece ser a mais apropriada**, dado que o aumento da dissimilaridade passa a ser substancial quando passamos de 3 para 2 grupos.
+* In terms of Dendogram the **division in three groups seems the most appropriate**, given that the increase in dissimilarity becomes substantial when we go from 3 to 2 groups.
 
 ```{r}
 atribuicoes = get_grupos(agrupamento_h, num_grupos = 1:6)
@@ -280,15 +279,16 @@ atribuicoes = atribuicoes %>%
     left_join(filmes, by = c("label" = "filme"))
 
 atribuicoes %>% 
-    ggplot(aes(x = "Filmes", y = avaliacao, colour = grupo)) + 
+    ggplot(aes(x = "Movies", y = avaliacao, colour = grupo)) + 
     geom_jitter(width = .02, height = 0, size = 1.6, alpha = .6) + 
-    facet_wrap(~ paste(k, " grupos")) + 
+    facet_wrap(~ paste(k, " groups")) + 
     scale_color_brewer(palette = "Dark2") +
-    labs(y = "Avaliação RT", x = "", title = "Agrupamento por Avaliação")
+    guides(color=guide_legend(title="group")) +
+    labs(y = "Rating RT", x = "", title = "Grouping by Rating")
 
 ```
 
-* Visualmente a divisão em três grupos parece de fato ser apropriada, o que está em acordo com o dendrograma.
+* Visually the division in three groups seems appropriate in accordance with the dendogram.
 
 ```{r}
 k_escolhido = 3
@@ -301,13 +301,14 @@ p <-atribuicoes %>%
                y = avaliacao,
                colour = grupo,
                text = paste(
-                    "Filme:", reorder(label, avaliacao),
-                    "\nAvaliação:", avaliacao,
-                    "\nGrupo:", grupo))) + 
+                    "Movie:", reorder(label, avaliacao),
+                    "\nRating:", avaliacao,
+                    "\nGroup:", grupo))) + 
     geom_jitter(width = .02, height = 0, size = 3, alpha = .6) + 
-    facet_wrap(~ paste(k, " grupos")) + 
+    facet_wrap(~ paste(k, " groups")) + 
     scale_color_brewer(palette = "Dark2") + 
-    labs(x = "", y = "Avaliação RT") + 
+    labs(x = "", y = "Rating RT") + 
+    guides(color=guide_legend(title="group")) +
     coord_flip()
 
 ggplotly(p,tooltip = "text") %>%
@@ -315,11 +316,11 @@ ggplotly(p,tooltip = "text") %>%
 
 ```
 
-* Discutivelmente, **Prince of Persia: The Sands of Time** poderia exigir um grupo para si próprio.
+* Arguably, **Prince of Persia: The Sands of Time** could demand a group of its own.
 
 <br>
 
-## Duas dimensões
+## Two dimensions
 
 <br>
 
