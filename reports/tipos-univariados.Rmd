@@ -1,13 +1,14 @@
 ---
 title: "Jake Gyllenhaal's type of movies"
+subtitle: "An analysis with hierarchical clustering on data from IMDB about Jake Gyllenhaal's movies"
 author: "José Benardi de Souza Nunes"
 date: "22/05/2018"
 output:
-  html_notebook:
-    toc: yes
-    toc_float: yes
   html_document:
     df_print: paged
+    toc: yes
+    toc_float: yes
+  html_notebook:
     toc: yes
     toc_float: yes
 ---
@@ -18,7 +19,7 @@ output:
 
 > Exploratory data analysis on data from [RottenTomatoes](https://www.rottentomatoes.com/) about actor Jake Gyllenhaal. The code used to mine the data here analyzed and the explanation on how to use it can be found on [this report's repository](https://github.com/Benardi/agrupamento-filmes/) deste relatório.
 
-* Entries that have no infomation about box office were ignored.
+* Entries that have no information about box office were ignored.
 
 <br>
 
@@ -203,7 +204,7 @@ ggdendrogram(agrupamento_h, rotate = T, size = 2, theme_dendro = F) +
     values=c("#56B4E9", "#FF9999"))
 ```
 
-* In terms of Dendrogram the separation in four and three groups seems apropriate, given that the increase in dissimilarity from 4 to 3 groups doesn't seem to be substantial.
+* In terms of Dendrogram the separation in four and three groups seems appropriate, given that the increase in dissimilarity from 4 to 3 groups doesn't seem to be substantial.
 * Cut made for 4 groups
 
 ```{r}
@@ -362,7 +363,7 @@ plota_hclusts_2d(agrupamento_h_2d,
     labs(y = "Box Office", x = "Rating", title = "Grouping with two dimensions")
 ```
 
-* The choice of 5 groups seems appropriate, as it reflects matters of Box Office as matters of Ratings. **We'll choose 5 groups** for the following reasons (Groups mentioned on the 5 groups divisition): 
+* The choice of 5 groups seems appropriate, as it reflects matters of Box Office as matters of Ratings. **We'll choose 5 groups** for the following reasons (Groups mentioned on the 5 groups division): 
     * The $\color{magenta}{\text{4 best rated movies}}$ are very close to each other and suggest a group.
     * The $\color{#7C3F7C}{\text{3 movies of small Box Office and low ratings}}$ are very dissimilar the rest of the movies and suggest a group.
     * The $\color{#16A085}{\text{4 movies of small Box Office and high ratings}}$ are close to each other and suggest a group.
@@ -407,7 +408,7 @@ ggplotly(p, tooltip = "text") %>%
 
 <br>
 
-$\color{#16A085}{\text{Group 1 (Oddball):}}$ _Movies overall well received by the public_, which reflected on its low revenue. The name Oddball comes from the later interest on the movies from people who consider themselves excentric not rarely to revalidate their sense of exclusivity.
+$\color{#16A085}{\text{Group 1 (Oddball):}}$ _Movies overall well received by the public_, which reflected on its low revenue. The name Oddball comes from the later interest on the movies from people who consider themselves eccentric not rarely to re-validate their sense of exclusivity.
 
 <br/>
 
@@ -419,7 +420,7 @@ $\color{#7C3F7C}{\text{Group 3 (Demolition of a budget):}}$ Movies overall _poor
 
 <br/>
 
-$\color{magenta}{\text{Grupo 4 (Broke Records and Awards):}}$ Movies _acclaimed by critics_ and whose box office was either successfull or at least decent. The movies in this group have a more serious tone, talking of serious matter that frequently create controversy (serial murders, non heterosexuality, terrorism..). The name of the group is a word play with the name of one of its movies and the sheer amount of prizes this particular movie won. 
+$\color{magenta}{\text{Grupo 4 (Broke Records and Awards):}}$ Movies _acclaimed by critics_ and whose box office was either successful or at least decent. The movies in this group have a more serious tone, talking of serious matter that frequently create controversy (serial murders, non heterosexuality, terrorism..). The name of the group is a word play with the name of one of its movies and the sheer amount of prizes this particular movie won. 
 
 <br/>
 
@@ -437,30 +438,28 @@ $\color{green}{\text{Grupo 5 (BlockBusters):}}$ Movies in which Jack acted that 
 
 $\color{#16A085}{\text{Grupo 1 (Oddball):}}$
 
-* **Stronger**: Filme biográfico sobre 'Jeff Bauman', vítima do atentado de Boston que perdeu ambas as pernas na explosão. O filme foi muito bem recebido pelos críticos que o elogiaram por ser bem executado, comovente e por focar numa história de superação ao invés de usar a tragédia para alimentar a paranóia em cima do terrorismo. O filme porém foi um fracasso em termos de bilheteria.
+* **Stronger**: Biographical movie about 'Jeff Bauman', victim of the Boston terrorist attack who lost both legs on the explosion. The film was acclaimed by the critics who complimented how well executed and moving the movie was, the movie was also praised for focusing on a story of overcoming instead of using the tragedy to do fear-mongering. The movie however was a complete failure in terms of box office.
 
 <br/>
 
-$\color{#CF5300}{\text{Grupo 2 (Sessão da Tarde):}}$
+$\color{#CF5300}{\text{Grupo 2 (Matinee):}}$
 
-* **Life**: Filme no gênero ficção científica espacial, teve um arrecadamento não muito expressivo
-assim como críticas igualmente pouco entusiasmadas. Foi considerado por muitos bem executados porém pouco inovativo.
+* **Life**: Movie in the genre spacial sci-fi, had a box office not that expressive and the critics were equally uninspired. Was considered by many well executed but little innovative.
 
 <br/>
 
 $\color{#7C3F7C}{\text{Grupo 3 (Demolition of a budget):}}$ 
 
-* **Demolition**: Neste filme Jake atua no papel de um homem que volta ao trabalho depois de perder a esposa e encontra contato humano em uma atendente de telemarketing ao reclamar de uma vending machine. O filme foi um fracasso em termos de arrecadamento assim como em termos de crítica. O filme teve seu script apontado como grande problema, esse foi descrito como 'tentando afetar profundidade' e anti-carismático.
+* **Demolition**: In this movie Jacks acts as a man back to work after losing his wife who finds comfort in the company of a telemarketing attendant who he meets when he complains about a vending machine. The movie was a failure in terms of box office as well as in terms of review. Critics pointed the movie script as the big problem, which was described as 'pretending to be profound' and anti-charismatic.
     
 <br/>
 
 $\color{magenta}{\text{Grupo 4 (Broke Records and Awards):}}$
 
-* **Brokeback Mountain**: Provavelmente a melhor atuação de Jake Gyllenhaal até o momento, esse filme rendeu a Jake uma indicação ao Oscar e levantou muita controvérsia por conter uma cena de sexo entre pessoas do mesmo sexo. A Academia (responsável por escolher os vencedores do Oscar) foi acusada de homofobia por não escolher esse filme como o ganhador de Melhor Fotografia, ainda assim Brokeback Mountain ganhou outros 141 prêmios e 128 nominações de acordo com o IMDB. O filme foi considerado um sucesso tanto em faturamento como em avaliação.
+* **Brokeback Mountain**: Probably Jake Gyllenhaal's best performance till now, this movie rendered Jake a Oscar nomination and raised a lot of controversy for containing a sex scene between two man. The Academy (responsible for choosing the Oscar winners) was accused of homophobia for not choosing this movie as the winner of Best Picture , still Brokeback Mountain won another 141 awards and 128 nominations according to IMDB. The movie was considered a success both in box office as in ratings.
 
 <br/>
 
 $\color{green}{\text{Grupo 5 (BlockBusters):}}$ 
 
-* **Prince of Persia: The Sands of Time**: Baseado no jogo de mesmo nome, jogo que ainda é pra muitos uma referência em qualidade e inovação. O filme resultou em comentários decepcionados tanto de críticos e fãs, os quais curiosamente não falharam em contribuir pro arrecadamento do filme.
-    
+* **Prince of Persia: The Sands of Time**: Based on the game of same name, game which many still consider a reference in quality and innovation. The movie brought disappointed comments from both critics and fans who curiously didn't fail to contribute to its box office.
