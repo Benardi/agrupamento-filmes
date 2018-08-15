@@ -15,7 +15,7 @@ output:
 
 <br/><br/>
 
-# Introdução
+# Introduction
 
 > Exploratory data analysis on data from [RottenTomatoes](https://www.rottentomatoes.com/) about actor Jake Gyllenhaal. The code used to mine the data here analyzed and the explanation on how to use it can be found on [this report's repository](https://github.com/Benardi/agrupamento-filmes/) deste relatório.
 
@@ -432,7 +432,7 @@ $\color{green}{\text{Grupo 5 (BlockBusters):}}$ Movies in which Jack acted that 
 
 <br/>
 
-### Filme-exemplo de cada grupo  
+### Movie-example of each group  
 
 <br/>
 
