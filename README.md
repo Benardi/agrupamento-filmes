@@ -11,6 +11,18 @@ In the `code` directory there's auxiliary code that can be used to gather data f
 
 Run `import_data()` with the name of the actor/actress/filme director that you  want to analyze and the file `data/movies.csv` will be generated. Data about Jake Gyllenhaal has been gathered in the aforementioned fashion.
 
+## Prerequisites
+
+* `R >= 3.3.3`
+* tidyverse
+* ggdendro
+* ggplot2
+* cluster
+* plotly
+* rvest
+* dplyr
+* here
+
 ## Execution
 
 The R notebooks reside in the *notebooks* directory, and ideally should be run under the Rstudio IDE.
